@@ -112,7 +112,13 @@ public class FilePickerBuilder {
 
     public void pickPhoto(Activity context)
     {
-       mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.MEDIA_PICKER);
+        mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.MEDIA_PICKER);
+        start(context,FilePickerConst.MEDIA_PICKER);
+    }
+
+    public void pickPhoto(android.app.Fragment context)
+    {
+        mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.MEDIA_PICKER);
         start(context,FilePickerConst.MEDIA_PICKER);
     }
 
@@ -123,6 +129,12 @@ public class FilePickerBuilder {
     }
 
     public void pickFile(Activity context)
+    {
+        mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.DOC_PICKER);
+        start(context,FilePickerConst.DOC_PICKER);
+    }
+
+    public void pickFile(android.app.Fragment context)
     {
         mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.DOC_PICKER);
         start(context,FilePickerConst.DOC_PICKER);
@@ -145,6 +157,18 @@ public class FilePickerBuilder {
             context.startActivityForResult(intent,FilePickerConst.REQUEST_CODE_PHOTO);
         else
             context.startActivityForResult(intent,FilePickerConst.REQUEST_CODE_DOC);
+    }
+
+    private void start(android.app.Fragment fragment, int pickerType)
+    {
+        PickerManager.getInstance().setProviderAuthorities(fragment.getActivity().getApplicationContext().getPackageName() + ".droidninja.filepicker.provider");
+
+        Intent intent = new Intent(fragment.getActivity(), FilePickerActivity.class);
+        intent.putExtras(mPickerOptionsBundle);
+        if(pickerType==FilePickerConst.MEDIA_PICKER)
+            fragment.startActivityForResult(intent,FilePickerConst.REQUEST_CODE_PHOTO);
+        else
+            fragment.startActivityForResult(intent,FilePickerConst.REQUEST_CODE_DOC);
     }
 
     private void start(Fragment fragment, int pickerType)
